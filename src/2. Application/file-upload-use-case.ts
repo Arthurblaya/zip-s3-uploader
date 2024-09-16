@@ -1,13 +1,15 @@
 import { UIInterface } from "./ui-interface";
 import { File } from "../1. Domain/file";
+import { FileRepository } from "./file-repository";
 
 export class FileUploadUseCase {
-    constructor(private userInterface: UIInterface) {
+    constructor(private userInterface: UIInterface, private fileRepository: FileRepository) {
         userInterface.upload(async (req: any, res: any) => {
             const file = req.file;
             if (!file) {
                 return res.status(400).json({ message: "No file uploaded" });
             }
+
             if (file.mimetype === 'application/zip') {
                 const fileContent = file.buffer.toString('utf-8');
                 const fileName = file.originalname;
@@ -16,6 +18,9 @@ export class FileUploadUseCase {
                     content: fileContent,
                     extension: 'zip'
                 });
+
+                await this.fileRepository.uploadFile(fileEntity);
+
                 return res.status(200).json({
                     message: "File uploaded successfully",
                     file: {
