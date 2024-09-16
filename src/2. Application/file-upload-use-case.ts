@@ -1,17 +1,35 @@
 import { UIInterface } from "./ui-interface";
+import { File } from "../1. Domain/file";
 
 export class FileUploadUseCase {
     constructor(private userInterface: UIInterface) {
         userInterface.upload(async (req: any, res: any) => {
-
-            return res.status(200).json({
-                message: "File uploaded"
-            });
-        })
+            const file = req.file;
+            if (!file) {
+                return res.status(400).json({ message: "No file uploaded" });
+            }
+            if (file.mimetype === 'application/zip') {
+                const fileContent = file.buffer.toString('utf-8');
+                const fileName = file.originalname;
+                const fileEntity = new File({
+                    name: fileName,
+                    content: fileContent,
+                    extension: 'zip'
+                });
+                return res.status(200).json({
+                    message: "File uploaded successfully",
+                    file: {
+                        name: fileEntity.name,
+                        extension: fileEntity.extension
+                    }
+                });
+            } else {
+                return res.status(400).json({ message: "Only zip files are accepted" });
+            }
+        });
     }
 
     async run() {
-        console.log("running")
+        console.log("running");
     }
-
 }

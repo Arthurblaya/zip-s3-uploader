@@ -1,15 +1,19 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { UIInterface } from '../2. Application/ui-interface';
+import multer from 'multer';
 
 export class ExpressUi implements UIInterface {
     private app = express();
+    private uploadMiddleware = multer();
+
     constructor() {
         this.app.use(express.json());
         this.app.use(this.basicAuth);
         this.app.listen(3000, () => { console.log('listening http://localhost:3000') });
     }
+
     async upload(callback: (req: any, res: any) => Promise<void>): Promise<void> {
-        this.app.post('/upload', async (req: Request, res: Response) => {
+        this.app.post('/upload', this.uploadMiddleware.single('file'), async (req: Request, res: Response) => {
             await callback(req, res);
         });
     }
@@ -35,5 +39,4 @@ export class ExpressUi implements UIInterface {
 
         return res.status(401).send('Bad credentials');
     };
-
 }
