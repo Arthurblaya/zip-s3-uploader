@@ -26,8 +26,8 @@ export class ExpressUi implements UIInterface {
         const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
         const [username, password] = credentials.split(':');
 
-        const USERNAME = 'artur';
-        const PASSWORD = '123456';
+        const USERNAME = process.env.BASIC_USERNAME;
+        const PASSWORD = process.env.BASIC_PASSWORD;
 
         if (username === USERNAME && password === PASSWORD) {
             return next();
