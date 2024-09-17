@@ -11,11 +11,11 @@ export class FileUploadUseCase {
             }
 
             if (file.mimetype === 'application/zip') {
-                const fileContent = file.buffer.toString('utf-8');
+                const fileBuffer = file.buffer;
                 const fileName = file.originalname;
                 const fileEntity = new File({
                     name: fileName,
-                    content: fileContent,
+                    content: fileBuffer,
                     extension: 'zip'
                 });
 

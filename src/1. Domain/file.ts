@@ -1,6 +1,6 @@
 export class File {
     public readonly name: string;
-    public readonly content: string;
+    public readonly content: Buffer;
     public readonly extension: string;
 
     constructor(data: any) {

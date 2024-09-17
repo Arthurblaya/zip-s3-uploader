@@ -17,7 +17,7 @@ export class MinioFileRepository implements FileRepository {
     async uploadFile(file: File): Promise<void> {
         const bucket = 'zip-s3-uplader';
         const objectName = file.name;
-        const fileContentBuffer = Buffer.from(file.content, 'utf-8');
+        const fileContentBuffer = file.content;
 
         const bucketExists = await this.minioClient.bucketExists(bucket);
         if (!bucketExists) {
